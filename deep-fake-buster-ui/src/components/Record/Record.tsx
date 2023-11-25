@@ -9,9 +9,9 @@ export const Record = (props:any) =>{
 
     console.log(props.progress)
 
-    return <div className={"w-full flex flex-row items-center justify-between p-4 border-b-[1px] border-slate-100"}>
+    return <div className={"w-[95%] flex flex-row items-center justify-between p-4 bg-gray-50 rounded-xl"}>
         <div>{props.videoName}</div>
-        <div className={"flex flex-row items-center w-[10vh] justify-between mr-[10vh]"}>
+        <div className={"flex flex-row items-center justify-between"}>
             {
                 props.progress ? <LinearProgress className={"w-[10vh]"}/> : (props.showDeleteBtn ? <Button
                     startIcon={<DeletIcon/>}

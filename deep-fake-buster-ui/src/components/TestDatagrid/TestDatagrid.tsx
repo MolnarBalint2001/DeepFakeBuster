@@ -155,14 +155,12 @@ export const TestDatagrid = () => {
                 </div>
             </div>
 
-            <div className={"w-full overflow-x-hidden h-[60vh]"}>
+            <div className={"w-full overflow-x-hidden h-[60vh] flex flex-col items-center space-y-2"}>
                 {
 
                     files?.map((e: any, index: number) => {
                         return <Record key={index} progress={e.progress} showDeleteBtn={showDeleteBtn} videoName={e.name} result={e.authenticated}
                                        handleDelete={handleDelete}/>
-
-
                     })
                 }
             </div>
