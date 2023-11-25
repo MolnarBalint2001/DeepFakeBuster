@@ -5,7 +5,7 @@ class BaseAuthFilter():
 
     
     def __init__(self, video_input) -> None:
-        self.vide_input = video_input
+        self.video_input = video_input
         pass
     
     
