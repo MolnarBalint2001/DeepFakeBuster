@@ -1,2 +1,5 @@
 env
 .vs
+assets/prepared_dataset
+assets/split_dataset
+assets/train_sample_videos
