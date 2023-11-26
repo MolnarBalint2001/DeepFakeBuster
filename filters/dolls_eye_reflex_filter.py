@@ -171,7 +171,7 @@ class DollsEyeReflexFilter(BaseAuthFilter):
 
 
 if __name__ == "__main__":
-    dolls_eye_reflex_filter = DollsEyeReflexFilter(TEST_FILE3)
+    dolls_eye_reflex_filter = DollsEyeReflexFilter(TEST_FILE2)
     try:
         dolls_eye_reflex_filter.run()
     except AuthenticityFailedException as ex:

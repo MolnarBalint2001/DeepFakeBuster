@@ -1,68 +1,15 @@
 import {Record} from "../Record/Record.tsx";
 import {FileUploader} from "react-drag-drop-files";
 import {useCallback, useEffect, useState} from "react";
-import {Button} from "@mui/material";
+import {Button, Typography} from "@mui/material";
 import SendIcon from '@mui/icons-material/Send';
-import DeletIcon from "@mui/icons-material/Delete"
 import {API_URL} from "../../globals/globals.ts";
-
+import {Paper} from "@mui/material";
 import Aos from "aos"
-import {Simulate} from "react-dom/test-utils";
-import progress = Simulate.progress;
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import {CloudUpload} from "@mui/icons-material";
 
-
-const testData: any[] = [
-    {
-        VideoName: "Video1.mp4",
-        Result: false
-    },
-    {
-        VideoName: "Video2.mp4",
-        Result: true
-    },
-    {
-        VideoName: "Video3.mp4",
-        Result: false
-    },
-    {
-        VideoName: "Video4.mp4",
-        Result: true
-    },
-    {
-        VideoName: "Video5.mp4",
-        Result: true
-    },
-    {
-        VideoName: "Video6.mp4",
-        Result: false
-    },
-    {
-        VideoName: "Video1.mp4",
-        Result: false
-    },
-    {
-        VideoName: "Video2.mp4",
-        Result: true
-    },
-    {
-        VideoName: "Video3.mp4",
-        Result: false
-    },
-    {
-        VideoName: "Video4.mp4",
-        Result: true
-    },
-    {
-        VideoName: "Video5.mp4",
-        Result: true
-    },
-    {
-        VideoName: "Video6.mp4",
-        Result: false
-    }
-]
-
-export const TestDatagrid = () => {
+export const TestDatagrid = ({theme}) => {
 
 
     useEffect(() => {
@@ -74,7 +21,8 @@ export const TestDatagrid = () => {
 
     const [files, setFiles] = useState<File[]>([]);
     const [showDeleteBtn, setShowDeleteBtn] = useState<boolean>(true);
-
+    const [isSent, setIsSent] = useState<boolean>(false);
+    const [uploadState, setUploadState] = useState<boolean>(true);
 
     const handleChange = (files: any) => {
 
@@ -85,7 +33,6 @@ export const TestDatagrid = () => {
             console.log(value);
             uploadedFiles.push(value)
         }
-        console.log(uploadedFiles)
         setFiles(uploadedFiles);
     }
 
@@ -94,8 +41,15 @@ export const TestDatagrid = () => {
     }
 
 
+    const creatImageFromVideo = ()=>{
+
+
+
+
+    }
+
     const handleSubmit = useCallback(() => {
-        setShowDeleteBtn(prevState => !prevState);
+        setUploadState(false);
         setFiles(prevState => {
             const newArray = prevState.map((e: any) => {
                 e.progress = true;
@@ -120,6 +74,7 @@ export const TestDatagrid = () => {
                                 if (file.name === data.original_filename){
                                     (file as any).progress = false;
                                     (file as any).authenticated = data.authenticated;
+                                    (file as any).failes = data.failes
                                 }
                                 return file
                             });
@@ -140,32 +95,65 @@ export const TestDatagrid = () => {
 
 
     return (
-        <div
-            className={"h-[80vh] w-[80%] shadow-2xl rounded-xl translate-y-[-5vh] bg-white flex flex-col items-center justify-start"}
-            data-aos={"fade-right"}>
+        <Paper  elevation={4}
+               sx={{
+                   backgroundColor:theme ? "#ffffff" : "#0f172a"
+               }}
+            className={`h-[80vh] w-[80%] !rounded-lg translate-y-[-5vh] bg-white flex flex-col items-center justify-start border-[1px] ${theme ? "border-slate-100" : "border-slate-800"} `}
+            >
 
-            <div className={"flex flex-col items-center  space-y-4 p-4 w-fit"}>
-                <div>Choose files</div>
+            <div className={"flex flex-col items-center  space-y-4 my-5 w-fit"}>
                 <div className={"flex flex-row items-center justify-between space-x-2"}>
-                    <FileUploader name={"file"} handleChange={handleChange} multiple={true} className={""}/>
-                    <Button startIcon={<SendIcon/>} variant={"contained"} color={"primary"} onClick={handleSubmit}
-                            className={""} size={"large"}>
+                    <FileUploader name={"file"} handleChange={handleChange} multiple={true} onSelect={()=>setShowDeleteBtn(true)}/>
+                    <Button startIcon={<SendIcon/>} disabled={files.length === 0 ? true : false} variant={"contained"} color={"primary"} onClick={handleSubmit}
+                            sx={{}} size={"large"}>
                         Send
+                    </Button>
+                    <Button startIcon={<RestartAltIcon/>}
+                            onClick={()=>{
+                                setFiles(prevState => []);
+                                setUploadState(true);
+                            }}
+                            disabled={files.length === 0 ? true : false}
+                            variant={"text"} color={"primary"}
+                            className={""} size={"large"}>
+                        {
+                            uploadState ? "Clear uploads" : "Clear results"
+                        }
                     </Button>
                 </div>
             </div>
 
-            <div className={"w-full overflow-x-hidden h-[60vh] flex flex-col items-center space-y-2"}>
+            <div className={"w-full overflow-x-hidden h-[60vh] flex flex-col items-center space-y-4"}>
                 {
 
+                    files.length === 0 ? <div className={"flex flex-col items-center mt-[20vh]"}>
+                            <CloudUpload sx={{
+                                height:100,
+                                width:100,
+                                color:theme ? "#d4d4d8" : "#334155"
+                            }}/>
+                            <Typography sx={{
+                                color:theme ? "#d4d4d8" : "#334155"
+                            }}>Upload videos and run tests</Typography>
+                    </div> :
                     files?.map((e: any, index: number) => {
-                        return <Record key={index} progress={e.progress} showDeleteBtn={showDeleteBtn} videoName={e.name} result={e.authenticated}
-                                       handleDelete={handleDelete}/>
+                        return <Record key={index}
+                                       theme={theme}
+                                       progress={e.progress}
+                                       uploadState={uploadState}
+                                       isSent={isSent}
+                                       showDeleteBtn={showDeleteBtn}
+                                       videoName={e.name}
+                                       result={e.authenticated}
+                                       failes={e.failes}
+                                       handleDelete={handleDelete}
+                        />
                     })
                 }
             </div>
 
-        </div>
+        </Paper>
     );
 
 
