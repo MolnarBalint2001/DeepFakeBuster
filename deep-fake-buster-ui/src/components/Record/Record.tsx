@@ -10,11 +10,13 @@ import InfoIcon from '@mui/icons-material/Info';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCheck} from "@fortawesome/free-solid-svg-icons";
 import {faClose} from "@fortawesome/free-solid-svg-icons";
+import VideoThumbnail from "react-video-thumbnail";
 
 export const Record = (props: any) => {
 
     const [open, setOpen] = useState<boolean>(false);
 
+    console.log(props.videoSrc)
     return <>
         <div
             onClick={() => {
@@ -22,8 +24,18 @@ export const Record = (props: any) => {
                     setOpen(true);
                 }
             }}
-            className={`w-[95%] ${props.result === null ? `${props.theme ? "bg-slate-50 border-slate-100" : "bg-slate-800 border-slate-700"} ` : props.result ?  `${props.theme ? "bg-green-50 border-green-200" : "bg-green-700 border-green-500"}` : `${props.theme ? "bg-red-50 border-red-100" : "bg-red-700 border-red-500"} `} h-[6vh] flex flex-row p-1 px-2 justify-between items-center border-[1px] rounded-md cursor-pointer`}>
-            <div className={`${props.theme ? "text-black" : "text-slate-400"}`}>{props.videoName}</div>
+            className={`w-[95%] ${props.result === null ? `${props.theme ? "bg-slate-50 border-slate-100" : "bg-slate-800 border-slate-700"} ` : props.result ?  `${props.theme ? "bg-green-50 border-green-200" : "bg-green-700 border-green-500"}` : `${props.theme ? "bg-red-50 border-red-100" : "bg-red-700 border-red-500"} `} h-fit flex flex-row p-1 px-2 justify-between items-center border-[1px] rounded-md cursor-pointer`}>
+            <div className={"flex flex-row items-center space-x-4"}>
+                <div className={"h-[68px] scale-[0.1] translate-y-[-30px] translate-x-[-40%]"}>
+                    <VideoThumbnail
+                        videoUrl={props.videoSrc}
+                    />
+
+                </div>
+                <div className={`${props.theme ? "text-black" : "text-slate-400"} pr-4`}>{props.videoName}</div>
+            </div>
+
+
             <div className={"flex flex-row items-center justify-between"}>
                 {
                     props.progress ? <LinearProgress className={"w-[10vh]"}/> : (props.uploadState ? <IconButton

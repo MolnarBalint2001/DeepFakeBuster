@@ -24,15 +24,17 @@ export const TestDatagrid = ({theme}) => {
     const [isSent, setIsSent] = useState<boolean>(false);
     const [uploadState, setUploadState] = useState<boolean>(true);
 
-    const handleChange = (files: any) => {
+    const handleChange = async (files: any) => {
 
         const uploadedFiles = []
         for (const [key, value] of Object.entries(files)) {
             (value as any).progress = false;
             (value as any).authenticated = null;
-            console.log(value);
+            (value as any).videoSrc = await createBlob(value)
+            console.log(value)
             uploadedFiles.push(value)
         }
+        console.log(uploadedFiles)
         setFiles(uploadedFiles);
     }
 
@@ -41,11 +43,10 @@ export const TestDatagrid = ({theme}) => {
     }
 
 
-    const creatImageFromVideo = ()=>{
-
-
-
-
+    const createBlob = async (file:any) =>{
+        const arrayBuffer = await file.arrayBuffer()
+        const blob =  new Blob([new Uint8Array(arrayBuffer)], {type: file.type });
+        return URL.createObjectURL(blob)
     }
 
     const handleSubmit = useCallback(() => {
@@ -140,6 +141,7 @@ export const TestDatagrid = ({theme}) => {
                     files?.map((e: any, index: number) => {
                         return <Record key={index}
                                        theme={theme}
+                                       videoSrc={e.videoSrc}
                                        progress={e.progress}
                                        uploadState={uploadState}
                                        isSent={isSent}
